@@ -15,6 +15,7 @@ class RunInfo:
     sequence = ''
     start = datetime.now()
     stop = datetime.now()
+    stopped = True
     clock = ''
     triggers = []
 
@@ -23,9 +24,13 @@ class RunInfo:
 
     def dump(self):
         print 'Run', self.run_number, 'with', self.lumi_sections, 'lumisections recorded'
-        print '  started at', self.start.ctime(), 'with clock:', self.clock
+        print '  clock:', self.clock
+        print '  started at', self.start.ctime()
+        if self.stopped:
+            print '  stopped at', self.stop.ctime()
         print '  LHC fill:', self.lhc_fill, 'at sqrt(s) =', self.lhc_energy, 'TeV'
         print '  sequence:', self.sequence
-        print '  triggers:'
-        for t in self.triggers:
-            t.dump()
+        if len(self.triggers)>0:
+            print '  triggers:'
+            for t in self.triggers:
+                t.dump()

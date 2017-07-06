@@ -9,7 +9,7 @@ def main():
     #cms_status.dump()
     print 'current CMS run:', cms_status.run_number
 
-    run_info = wbm.getRunInfo(cms_status.run_number, True)
+    run_info = wbm.getRunInfo(cms_status.run_number, False)
     run_info.dump()
 
 if __name__=='__main__':

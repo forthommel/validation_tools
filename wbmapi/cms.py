@@ -22,9 +22,11 @@ class CMSStatus:
     crossing_angle = 0.0
 
     def inGlobal(self):
+      """List of subsystems inside the global run"""
       return [fed for fed, state in self.feds_state.iteritems() if state==True]
 
     def inLocal(self):
+      """List of subsystems remaining out of the global run"""
       return [fed for fed, state in self.feds_state.iteritems() if state==False]
 
     def dump(self):
