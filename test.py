@@ -1,7 +1,8 @@
-from wbmapi import api
+from wbm_api import api as wbm_api
+from das_api import api as das_api
 
 def main():
-    wbm = api.api()
+    wbm = wbm_api.api()
     #lhc_status = wbm.getLHCShortStatus()
     #lhc_status.dump()
 
@@ -11,6 +12,9 @@ def main():
 
     run_info = wbm.getRunInfo(cms_status.run_number, False)
     run_info.dump()
+
+    das = das_api.api()
+    das.call('run dataset=/L1MinimumBias/Run2016B-v2/RAW')
 
 if __name__=='__main__':
     main()
