@@ -8,6 +8,7 @@ from datetime import datetime
 
 from lhc import LHCStatus, LHCShortStatus, LHCFillScheme
 from cms import CMSStatus
+from run import RunInfo, TriggerInfo
 
 class api:
     _base_url_ = 'https://cmswbm.cern.ch/cmsdb/servlet'
@@ -93,3 +94,37 @@ class api:
                 pass
 
             return cms
+
+    def getRunInfo(self, run_id, get_triggers=False):
+        data = auth.getContent('%s/RunSummary?RUN=%d&DB=default&FORMAT=XML' % (self._base_url_, run_id))
+        data = tree.fromstring(data)
+
+        s = data.find('runInfo')
+        run = RunInfo(run_id)
+        try:
+            run.lhc_fill = int(s.find('lhcFill').text)
+            run.lhc_energy = float(s.find('lhcEnergy').text)
+            run.lumi_sections = int(s.find('nLumiSections').text)
+            run.sequence = s.find('sequence').text
+            run.start = datetime.strptime(s.find('startTime').text+' GMT', '%Y.%m.%d %H:%M:%S %Z')
+        except AttributeError:
+            print 'ERROR in parsing the Run report'
+            pass
+        if get_triggers:
+            try:
+                algo_names = s.find('algoNames')
+                algo_initial_presc = s.find('algoInitialPrescale')
+                algo_en = s.find('algoEnable')
+                gt_algo_low = s.find('gtAlgoLow')
+                for i in range(0,512):
+                    trig = TriggerInfo()
+                    trig.name = algo_names.find('i%d' % i).text
+                    if trig.name==None: continue
+                    trig.enabled = algo_en.find('i%d' % i).text=='true'
+                    trig.rate = float(gt_algo_low.find('i%d' % i).text)
+                    run.triggers.append(trig)
+            except AttributeError:
+                print 'ERROR in parsing the Triggers report'
+                pass
+
+        return run
