@@ -26,7 +26,6 @@ def getContent(url):
     req = urllib2.Request(url)
     req.add_data(urllib.urlencode(post_data_local))
     r = opener.open(req)
-    print 'response code=',r.code,r.geturl()
     data = r.read()
     r.close()
     return data

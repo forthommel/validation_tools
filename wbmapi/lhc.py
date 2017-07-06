@@ -33,7 +33,18 @@ class LHCFillScheme:
         """General variant: `trainlength_injections_specialinfo`"""
         return self._scheme_[5]
 
-class LHCstatus:
+class LHCShortStatus:
+    fillnum = 0
+    mode = 'NO_BEAM'
+    prev_mode = 'NO_BEAM'
+    timestamp = datetime.now()
+    def dump(self):
+        print 'LHC brief status (updated on', self.timestamp.ctime(), '):'
+        print '  fill:', self.fillnum
+        print '  current machine mode:', self.mode
+        print '  previous machine mode:', self.prev_mode
+
+class LHCStatus:
     fillnum = 0
     collidingbunches = 0
     betastar5 = 0.0
@@ -41,7 +52,7 @@ class LHCstatus:
     injectionsch = LHCFillScheme()
     lastupdate = datetime.now()
     def dump(self):
-        print 'LHC status (updated on', self.lastupdate, '):'
+        print 'LHC status (retrieved on', self.lastupdate.ctime(), '):'
         print '  fill:', self.fillnum
         print '  injection scheme:', self.injectionsch.raw()
         print '    (at IP1/5:', self.injectionsch.numBunchesIP1and5(), 'bunches)'
