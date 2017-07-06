@@ -14,7 +14,8 @@ def main():
     run_info.dump()
 
     das = das_api.api()
-    das.call('run dataset=/L1MinimumBias/Run2016B-v2/RAW')
+    #das.call('run dataset=/L1MinimumBias/Run2016B-v2/RAW')
+    print das.datasetsForRun(cms_status.run_number)
 
 if __name__=='__main__':
     main()
