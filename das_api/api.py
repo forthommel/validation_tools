@@ -1,6 +1,8 @@
 import subprocess
+import re
 
 class api:
+    _rgx_outof_ = re.compile('out of (\\d+) results')
     def __init__(self):
         'das api initialised...'
 
@@ -16,6 +18,12 @@ class api:
         res = subprocess.Popen(args, stdout=subprocess.PIPE).communicate()[0]
         output = []
         for l in res.split('\n'):
-            if 'Showing ' in l or len(l)==0 or l=='None': continue
+            if len(l)==0 or l=='None': continue
+            if 'Showing ' in l:
+                m = re.search(self._rgx_outof_, l)
+                total_res = int(m.group(1))
+                continue
             output.append(l)
+        if total_res>limit:
+            print 'WARNING more results than the expected limit:', total_res, '>', limit
         return output
