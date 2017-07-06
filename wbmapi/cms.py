@@ -20,6 +20,13 @@ class CMSStatus:
     instant_lumi = 0.0
     fill_lumi = 0.0
     crossing_angle = 0.0
+
+    def inGlobal(self):
+      return [fed for fed, state in self.feds_state.iteritems() if state==True]
+
+    def inLocal(self):
+      return [fed for fed, state in self.feds_state.iteritems() if state==False]
+
     def dump(self):
         print 'CMS status (at '+self.collection_time.ctime()+'):'
         print '  DCS info:'
@@ -27,8 +34,8 @@ class CMSStatus:
         print '    vacuum pressure:', self.vacuum_pressure
         print '  DAQ state:', self.daq_state
         print '    current run:', self.run_number, "ls:", self.lumi_section
-        print '    subsystems IN:', [fed for fed, state in self.feds_state.iteritems() if state==True]
-        print '    subsystems OUT:', [fed for fed, state in self.feds_state.iteritems() if state==False]
+        print '    subsystems IN:', self.inGlobal()
+        print '    subsystems OUT:', self.inLocal()
         print '    T0 transfer?', self.t0_transfer
         print '    dead time:', self.dead_time,'%'
         print '  TRG info:'
